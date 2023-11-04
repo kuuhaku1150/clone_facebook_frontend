@@ -65,4 +65,11 @@ export const StyleBody = styled.div`
     display: flex;
     justify-content: center;
   }
+  .header-register-h1 {
+    color:#606770;
+    font-size: 17px;
+  }
+  .container-register{
+    width: 400px;
+  }
 `;

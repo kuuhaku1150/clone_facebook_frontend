@@ -1,16 +1,30 @@
 import React from "react";
 
 export default function ButtonFacebook(props) {
-  const { width, height, title, fontSize, background, handleClick } = props;
+  const {
+    width,
+    height,
+    title,
+    fontSize,
+    background,
+    handleClick,
+    showModal,
+    handleRegister,
+  } = props;
   const login = () => {
     handleClick();
   };
   const register = () => {
-    console.log("first");
+    if (showModal) {
+      showModal();
+    }
+    if (handleRegister) {
+      handleRegister();
+    }
   };
   return (
     <button
-      className="pl-2 pr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+      className="pl-2 pr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center "
       style={{
         width: width ? width : "100%",
         height: height ? height : "50px",

@@ -17,6 +17,15 @@ const authFacebook = {
       throw error;
     }
   },
+  registerFacebook: function (payload) {
+    try {
+      return apiConfig.post("/api/facebook/auth/register", {
+        payload: payload,
+      });
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default authFacebook;
