@@ -38,6 +38,7 @@ const ContentFooter = (props) => {
   };
 
   const dataLength = props.dataLength;
+
   const handleChat = (index) => {
     const payload = {
       chatId: props.chatId,
@@ -122,7 +123,10 @@ const ContentFooter = (props) => {
                         </div>
                       </div>
                     ) : (
-                    <div key={indexMess} style={{ visibility: "hidden" }}></div>
+                      <div
+                        key={indexMess}
+                        style={{ visibility: "hidden" }}
+                      ></div>
                     )
                   ) : (
                     <div key={indexMess} style={{ visibility: "hidden" }}></div>
@@ -130,7 +134,7 @@ const ContentFooter = (props) => {
                 )
               ) : (
                 <div style={{ visibility: "hidden" }}></div>
-                )}
+              )}
             </div>
             <div className="container-input-button" key={indexData}>
               <div

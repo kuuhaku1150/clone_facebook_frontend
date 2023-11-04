@@ -36,14 +36,14 @@ export default function BodyLoginPage() {
         //   resLoginFacebook.data.data.lastName;
         // socket.emit("join_room", room, username);
 
-        localStorage.setItem("token", resLoginFacebook.data.token);
+        localStorage.setItem("token", resLoginFacebook?.data?.token);
         localStorage.setItem(
           "fullname",
           resLoginFacebook.data.data.firstName +
             " " +
             resLoginFacebook.data.data.lastName
         );
-
+        localStorage.setItem("userId", resLoginFacebook.data.data._id);
         router.push("homepage");
         console.log("success");
       } else {
@@ -59,9 +59,9 @@ export default function BodyLoginPage() {
         <div className="container-login">
           <div className="label-facebook">
             <div className="container-label">
-              <div className="icon-label">facebook</div>
+              <div className="icon-label">facebug</div>
               <div className="desc-label">
-                Facebook ช่วยคุณเชื่อมต่อและแชร์กับผู้คนมากมายรอบตัวคุณ
+                Facebug ช่วยคุณเชื่อมต่อและแชร์กับผู้คนมากมายรอบตัวคุณ
               </div>
             </div>
           </div>
@@ -84,6 +84,7 @@ export default function BodyLoginPage() {
               >
                 <TextInputPost
                   height="50px"
+                  type="password"
                   placeholder="รหัสผ่าน"
                   value={dataInput.password}
                   handleChange={(e) => handleInput(e, "password")}

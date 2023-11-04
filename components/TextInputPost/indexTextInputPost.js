@@ -1,7 +1,7 @@
 import React from "react";
 
 export default function TextInputPost(props) {
-  const { placeholder, handleChange, value, width, height } = props;
+  const { placeholder, handleChange, value, width, height, type } = props;
   const handleChangeTest = () => {
     console.log("test");
   };
@@ -12,7 +12,7 @@ export default function TextInputPost(props) {
         width: width ? width : "100%",
         height: height ? height : "30px",
       }}
-      type="text"
+      type={type ? type : "text"}
       value={value ? value : ""}
       placeholder={placeholder ? placeholder : ""}
       onChange={handleChange ? handleChange : handleChangeTest}

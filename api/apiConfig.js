@@ -8,7 +8,9 @@ const APICaller = (params) => {
     headers: {
       "Content-Type": "application/json;charset=UTF-8",
       Accept: "application/json, text/plain, */*",
-      Authorization: params?.token?params?.token : `Bearer ${global.api_token}`,
+      Authorization: params?.token
+        ? params?.token
+        : `Bearer ${global.api_token}`,
     },
   });
 
