@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { StyleContentLCenter } from "./styleContentCenter";
 import io from "socket.io-client";
-
+import Moment from "moment";
 import {
   UserCircleIcon,
   VideoCameraIcon,
@@ -15,10 +15,13 @@ import {
 } from "@heroicons/react/outline";
 import facebookService from "../../api/services/facebookService";
 import TextInputPost from "../../components/TextInputPost/indexTextInputPost";
+import ModalPostImage from "../modalPostImage/indexModalPostImage";
 const socket = io.connect("http://localhost:3300");
 
 export default function ContentCenter() {
   const [dataContentFacebook, setDataContentFacebook] = useState([]);
+  const [stateDialog, setStateDialog] = useState(false);
+  const [stateLike, setStateLike] = useState(false);
 
   // const [postContent, setPostContent] = useState("");
   // const [commentContent, setCommentContent] = useState("");
@@ -26,8 +29,9 @@ export default function ContentCenter() {
     postContent: "",
     commentContent: "",
   });
-
+  const [img, setImg] = useState("");
   const fullName = localStorage.getItem("fullname");
+  const userId = localStorage.getItem("userId");
   useEffect(() => {
     document.addEventListener("click", handleClickOutside, true);
     fetchDataFacebook();
@@ -58,6 +62,10 @@ export default function ContentCenter() {
     };
   }, [dataContentFacebook]);
 
+  const openDialog = () => {
+    setStateDialog(!stateDialog);
+  };
+
   const fetchDataFacebook = async () => {
     try {
       const resFacebook = await facebookService.getDataFacebook();
@@ -85,23 +93,22 @@ export default function ContentCenter() {
     }
   };
 
-  const handleClick = (e, id, index) => {
+  const handleClick = async (e, id, dataId) => {
+    await setStateLike(!stateLike);
+    const statusLike = stateLike;
+    const likes = {
+      userLike: {
+        like: statusLike,
+        idUserLike: userId,
+      },
+    };
     var element = e?.target;
-    // var currentNav = document.getElementsByClassName("active");
     var classId = element.closest("." + id);
-    // console.log(currentNav);
     classId.classList.toggle("active");
-    // if (currentNav[index] !== undefined) {
-    //   console.log(currentNav[index]);
-    //   currentNav[index].className = currentNav[index].className.replace(
-    //     " active",
-    //     ""
-    //   );
-    // } else {
-    //   if (classId.classList.contains(id)) {
-    //     classId.className += " active";
-    //   }
-    // }
+
+    const resLikeFacebook = await facebookService.postCommentFacebook(dataId, {
+      likes,
+    });
   };
 
   const handleClickOutside = (e) => {
@@ -121,6 +128,7 @@ export default function ContentCenter() {
       const resPostFacebook = await facebookService.postContentFacebook({
         ownerPost: fullName,
         content: dataInput.postContent,
+        img: img,
       });
       if (resPostFacebook.status === 200) {
         console.log("success");
@@ -211,7 +219,7 @@ export default function ContentCenter() {
               </div>
             </div>
             <div className="basis-2/6">
-              <div className="activity-all">
+              <div className="activity-all" onClick={openDialog}>
                 <PhotographIcon className="w-8" style={{ color: "#00c87f" }} />{" "}
                 Photo/video
               </div>
@@ -235,7 +243,9 @@ export default function ContentCenter() {
             <div className="container-user-post">
               <div>
                 <div className="user-facebook">{data.ownerPost}</div>
-                <p className="time-facebook">16h</p>
+                <p className="time-facebook">
+                  {Moment(data.createdAt).format("DD MMM yyyy")}
+                </p>
               </div>
               <div className="three-dot">
                 <div className="dropdown">
@@ -262,6 +272,20 @@ export default function ContentCenter() {
             </div>
           </div>
           <div className="content-facebook">{data.content}</div>
+          {data.img !== "" ? (
+            <div className="content-facebook">
+              {" "}
+              <Image
+                src={data.img}
+                alt="Image"
+                width="100%"
+                height="100%"
+                layout="responsive"
+              />
+            </div>
+          ) : (
+            <div></div>
+          )}
           <hr className="ml-3 mr-3" />
           <div className="px-6 pt-4 pb-2">
             <div className="flex flex-row">
@@ -269,7 +293,7 @@ export default function ContentCenter() {
                 <div
                   className="like"
                   onClick={(e) => {
-                    handleClick(e, "like", index);
+                    handleClick(e, "like", data._id);
                   }}
                 >
                   <ThumbUpIcon className="w-8" /> Like
@@ -331,6 +355,11 @@ export default function ContentCenter() {
           </div>
         </div>
       ))}
+      <ModalPostImage
+        stateDialog={stateDialog}
+        setStateDialog={setStateDialog}
+        fetchDataFacebook={fetchDataFacebook}
+      />
     </StyleContentLCenter>
   );
 }
